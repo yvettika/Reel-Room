@@ -1,5 +1,14 @@
-# Reel Room
+# Reel Room (Infinity Reach Media edition)
 
+> This is Yvette's own copy of [Reel Room](https://github.com/drleadflow/reel-room) (MIT licensed, version 0.2.0, upstream commit `cf20631`), set up for Infinity Reach Media.
+>
+> What's different from the original:
+> - Brand comes preloaded: Yvette Kahn, @buildwithyvette, the site's pink accent (`#D10D6E`) with blush tint (`#FFD9EC`), navy ink (`#161F4A`), cool paper background (`#F1F4FB`), and the site's fonts (Montserrat for big titles, DM Sans for body, Playfair Display for serif moments, Caveat for handwriting). `./reel setup` starts from these, so you can just press Enter.
+> - `./reel setup` keeps your paper, ink and extra fonts when you re-run it instead of resetting them to the stock cream and black.
+>
+> To install: `git clone https://github.com/yvettika/reel-room.git && cd reel-room`, then follow the Quick start below from `./install.sh`.
+>
+> To pull in updates from the original project: `git remote add upstream https://github.com/drleadflow/reel-room.git` (once), then `git pull upstream main` and `./install.sh`.
 
 Type `/reel` in Claude Code, give it your talking-head clips, and get a finished 9:16 reel: best takes picked, dead air and false starts cut in real silence, captions that match what you said, graphics that land on the word, and files ready to post (master, share copy, silent version, captions, cover).
 

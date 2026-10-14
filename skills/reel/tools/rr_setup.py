@@ -57,12 +57,20 @@ def accent_ok(v: str):
     return None
 
 
-def build(name, handle, accent, display, body, hand, keyword, cta_text, projects, clips, voice=None) -> dict:
+def build(name, handle, accent, display, body, hand, keyword, cta_text, projects, clips, voice=None,
+          cur: dict | None = None) -> dict:
     accent = ACCENTS.get(accent.lower(), accent).upper()
+    # Keep the paper, ink, highlight and alert colours (and extra fonts like "serif") already in the brand, so a
+    # re-run only changes what was asked. accent2 follows the accent unless the accent is unchanged.
+    cur = cur or {}
+    cc = cur.get("colors", {})
+    keep = {k: cc[k] for k in ("bg", "ink", "highlight", "alert") if HEX.match(str(cc.get(k, "")))}
+    acc2 = cc["accent2"] if str(cc.get("accent", "")).upper() == accent and HEX.match(str(cc.get("accent2", ""))) \
+        else tint(accent)
     return {"name": name, "handle": handle.lstrip("@"),
-            "colors": {"bg": "#F4F1EC", "ink": "#0C0C0F", "accent": accent, "accent2": tint(accent),
-                       "highlight": "#FAE67A", "alert": "#C8323F"},
-            "fonts": {"display": display, "body": body, "hand": hand},
+            "colors": {"bg": "#F4F1EC", "ink": "#0C0C0F", "highlight": "#FAE67A", "alert": "#C8323F", **keep,
+                       "accent": accent, "accent2": acc2},
+            "fonts": {**cur.get("fonts", {}), "display": display, "body": body, "hand": hand},
             "cta": ({"keyword": keyword.upper(), "text": cta_text or f"Comment {keyword.upper()}"}
                     if keyword and keyword.lower() != "none" else None),
             "logo": None, "projectsDir": projects, "clipsDir": clips, **({"voice": voice} if voice else {})}
@@ -85,7 +93,7 @@ def interactive(cur: dict) -> dict:
     projects = ask("Folder for finished projects", cur.get("projectsDir", "~/ReelRoom"))
     clips = ask("Folder where new clips usually land", cur.get("clipsDir", "~/Downloads"))
     voice = input("How you sound, one line (optional, Enter to skip): ").strip() or cur.get("voice")
-    return build(name, handle, accent, display, body, hand, keyword, cta_text, projects, clips, voice)
+    return build(name, handle, accent, display, body, hand, keyword, cta_text, projects, clips, voice, cur)
 
 
 def main(argv=None) -> int:
@@ -108,7 +116,7 @@ def main(argv=None) -> int:
                       a.display or f.get("display", "Inter Tight"), a.body or f.get("body", "Inter"),
                       a.hand or f.get("hand", "Caveat"), a.cta_keyword or c.get("keyword", "none"),
                       a.cta_text or c.get("text", ""), a.projects_dir or cur.get("projectsDir", "~/ReelRoom"),
-                      a.clips_dir or cur.get("clipsDir", "~/Downloads"), a.voice or cur.get("voice"))
+                      a.clips_dir or cur.get("clipsDir", "~/Downloads"), a.voice or cur.get("voice"), cur)
     else:
         brand = interactive(cur)
     if "lessons" in cur:
