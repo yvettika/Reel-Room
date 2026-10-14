@@ -15,7 +15,10 @@
     "hand": "Caveat",
     "serif": "Playfair Display"
   },
-  "cta": null,
+  "cta": {
+    "keyword": "BUILD",
+    "text": "Comment BUILD"
+  },
   "logo": null,
   "projectsDir": "~/ReelRoom",
   "clipsDir": "~/Downloads"
